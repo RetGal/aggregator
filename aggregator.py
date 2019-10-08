@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
     CONF = Config()
 
-    if int(datetime.date.today().strftime("%j")) != 1:
+    if int(datetime.date.today().strftime("%j")) == 1:
         archive_target_files()
 
     BOT_CSV_FILES = sorted(get_active_bot_csv_files())
