@@ -2,7 +2,7 @@
 
 ## Funktion
 
-Mit Hilfe von *aggregator* lassen sich von *MAverage* oder *holdntrade* Instanzen generierte CSV-Dateien zu einer gemeinsamen CSV-Datei zusammenfassen und als Tagesrapport per E-Mail versenden.
+Mit Hilfe von *aggregator* lassen sich von *[MAverage](https://github.com/RetGal/MAverage)* oder *[holdntrade](https://github.com/RetGal/holdntrade)* Instanzen generierte CSV-Dateien zu einer gemeinsamen CSV-Datei zusammenfassen und als Tagesrapport per E-Mail versenden.
 
 ## Voraussetzungen
 
