@@ -118,8 +118,8 @@ if __name__ == '__main__':
 
     write_csv(CONTENT, CONF.file_name)
 
-    SERVER = socket.gethostname()
-
-    send_mail('Aggregator Report', SERVER + '\n' + CONTENT, CONF.file_name)
+    if CONF.send_emails:
+        SERVER = socket.gethostname()
+        send_mail('Aggregator Report', SERVER + '\n\n' + CONTENT, CONF.file_name)
 
     exit(0)
