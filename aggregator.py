@@ -68,6 +68,14 @@ def read_csv(filename_csv: str):
     return None
 
 
+def getBotType():
+    if os.path.isfile(TARGET_PATH + os.path.sep + 'holdntrade.py'):
+        return 'holdntrade'
+    if os.path.isfile(TARGET_PATH + os.path.sep + 'maverage.py'):
+        return 'maverage'
+    return 'unknown'
+
+
 def send_mail(subject: str, text: str, attachment: str = None):
     recipients = ", ".join(CONF.recipient_addresses)
     msg = MIMEMultipart()
@@ -114,12 +122,12 @@ if __name__ == '__main__':
 
     LINES = fetch_csv_content(BOT_CSV_FILES)
 
-    CONTENT = ''.join([line for line in LINES if line is not None])
+    CSV_CONTENT = ''.join([line for line in LINES if line is not None])
 
-    write_csv(CONTENT, CONF.file_name)
+    write_csv(CSV_CONTENT, CONF.file_name)
 
     if CONF.send_emails:
-        SERVER = socket.gethostname()
-        send_mail('Aggregator Report', SERVER + '\n\n' + CONTENT, CONF.file_name)
+        MAIL_CONTENT = getBotType() + '@' + socket.gethostname()
+        send_mail('Aggregator Report', MAIL_CONTENT, CONF.file_name)
 
     exit(0)
