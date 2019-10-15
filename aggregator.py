@@ -18,8 +18,7 @@ class Config:
 
         try:
             props = dict(config.items('config'))
-            self.file_name = props['file_name'].strip('"').split(".")[0] + '.csv'
-            self.full_file_name = TARGET_PATH + os.path.sep + self.file_name
+            self.file_name = TARGET_PATH + os.path.sep + props['file_name'].strip('"').split(".")[0] + '.csv'
             self.send_emails = bool(props['send_emails'].strip('"').lower() == 'true')
             self.recipient_addresses = props['recipient_addresses'].strip('"').replace(' ', '').split(",")
             self.sender_address = props['sender_address'].strip('"')
@@ -34,7 +33,7 @@ def get_active_bot_csv_files():
 
 
 def get_all_target_csv_files():
-    needle = os.path.basename(CONF.full_file_name).split(".")[0]
+    needle = os.path.basename(CONF.file_name).split(".")[0]
     return [fn for fn in os.listdir(TARGET_PATH) if fn.startswith(needle)]
 
 
@@ -95,7 +94,7 @@ def send_mail(subject: str, text: str, attachment: str = None):
         with open(attachment, "rb") as file:
             part.set_payload(file.read())
         encoders.encode_base64(part)
-        part.add_header('Content-Disposition', "attachment; filename={}".format(CONF.file_name))
+        part.add_header('Content-Disposition', "attachment; filename={}".format(os.path.basename(attachment)))
         msg.attach(part)
 
     server = smtplib.SMTP(CONF.mail_server, 587)
@@ -125,10 +124,10 @@ if __name__ == '__main__':
 
     CSV_CONTENT = ''.join([line for line in LINES if line is not None])
 
-    write_csv(CSV_CONTENT, CONF.full_file_name)
+    write_csv(CSV_CONTENT, CONF.file_name)
 
     if CONF.send_emails:
         MAIL_CONTENT = getBotType() + '@' + socket.gethostname()
-        send_mail('Aggregator Report', MAIL_CONTENT, CONF.full_file_name)
+        send_mail('Aggregator Report', MAIL_CONTENT, CONF.file_name)
 
     exit(0)
