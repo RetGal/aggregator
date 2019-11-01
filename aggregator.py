@@ -122,7 +122,7 @@ if __name__ == '__main__':
 
     LINES = fetch_csv_content(BOT_CSV_FILES)
 
-    CSV_CONTENT = ''.join([line for line in LINES if line is not None])
+    CSV_CONTENT = ''.join([line for line in LINES if line is not None]) + '\n'
 
     write_csv(CSV_CONTENT, CONF.file_name)
 
