@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import configparser
 import datetime
 import os
@@ -71,11 +71,13 @@ def read_csv(filename_csv: str):
     return None
 
 
-def getBotType():
+def get_bot_type():
     if os.path.isfile(TARGET_PATH + os.path.sep + 'holdntrade.py'):
         return 'holdntrade'
     if os.path.isfile(TARGET_PATH + os.path.sep + 'maverage.py'):
         return 'maverage'
+    if os.path.isfile(TARGET_PATH + os.path.sep + 'balancer.py'):
+        return 'balancer'
     return 'unknown'
 
 
@@ -133,7 +135,8 @@ if __name__ == '__main__':
     write_csv(CSV_CONTENT, CONF.file_name)
 
     if CONF.send_emails:
-        MAIL_CONTENT = getBotType() + '@' + socket.gethostname()
-        send_mail('Aggregator Report', MAIL_CONTENT, CONF.file_name)
+        BOT_TYPE = get_bot_type()
+        MAIL_CONTENT = BOT_TYPE + '@' + socket.gethostname()
+        send_mail('Aggregator Report {}'.format(BOT_TYPE), MAIL_CONTENT, CONF.file_name)
 
     exit(0)
