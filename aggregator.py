@@ -12,13 +12,16 @@ from email.mime.text import MIMEText
 
 
 class Config:
-    def __init__(self):
+    def __init__(self, file_name: str = None):
         config = configparser.RawConfigParser()
         config.read('aggregator.txt')
 
         try:
             props = dict(config.items('config'))
-            self.file_name = TARGET_PATH + os.path.sep + props['file_name'].strip('"').split(".")[0] + '.csv'
+            if file_name:
+                self.file_name = TARGET_PATH + os.path.sep + file_name.strip('"').split(".")[0] + '.csv'
+            else:
+                self.file_name = TARGET_PATH + os.path.sep + props['file_name'].strip('"').split(".")[0] + '.csv'
             self.send_emails = bool(props['send_emails'].strip('"').lower() == 'true')
             self.recipient_addresses = props['recipient_addresses'].strip('"').replace(' ', '').split(",")
             self.sender_address = props['sender_address'].strip('"')
@@ -113,7 +116,10 @@ if __name__ == '__main__':
     else:
         TARGET_PATH = os.path.curdir
 
-    CONF = Config()
+    if len(sys.argv) > 2:
+        CONF = Config(sys.argv[2])
+    else:
+        CONF = Config()
 
     if int(datetime.date.today().strftime("%j")) == 1:
         archive_target_files()
