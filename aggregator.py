@@ -102,11 +102,11 @@ def send_mail(subject: str, text: str, attachment: str = None):
         part.add_header('Content-Disposition', "attachment; filename={}".format(os.path.basename(attachment)))
         msg.attach(part)
 
-    server = smtplib.SMTP(CONF.mail_server, 587)
-    server.starttls()
+    server = smtplib.SMTP_SSL(CONF.mail_server, 465)
+    # server.starttls()
     server.set_debuglevel(0)
     server.login(CONF.sender_address, CONF.sender_password)
-    server.send_message(msg)
+    server.send_message(msg, from_addr=CONF.sender_address, to_addrs=recipients, mail_options=(), rcpt_options=())
     server.quit()
 
 
