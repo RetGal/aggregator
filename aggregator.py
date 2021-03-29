@@ -123,6 +123,11 @@ if __name__ == '__main__':
     else:
         CONF = Config()
 
+    now = datetime.datetime.utcnow();
+    if now.hour != 12 or now.minute < 30:
+        print('It is not half past noon UTC: {}'.format(now.time().replace(microsecond=0)))
+        exit(0)
+
     if int(datetime.date.today().strftime("%j")) == 1:
         archive_target_files()
 
