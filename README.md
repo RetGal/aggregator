@@ -19,9 +19,9 @@ Der Name der aggregierten CSV-Datei kann optional als zweiter Parameter übergeb
 Für einen täglichen Versand wird ein oder mehrere *Cronjobs* benötigt:
 
 ```
-20  14   *   *   *   /home/bot/aggregator.py /home/bot/holdntrade
-30  14   *   *   *   /home/bot/aggregator.py /home/bot/maverage allMAverage.csv
-40  14   *   *   *   /home/bot/aggregator.py /home/bot/balancer allBalancer.csv
+30  12,13,14   *   *   *   /home/bot/aggregator.py /home/bot/holdntrade
+35  12,13,14   *   *   *   /home/bot/aggregator.py /home/bot/maverage allMAverage.csv
+40  12,13,14   *   *   *   /home/bot/aggregator.py /home/bot/balancer allBalancer.csv
 ```
 
 Die Datei *aggregator.py* muss vor dem ersten Start mittels `chmod +x` ausführbar gemacht werden.
