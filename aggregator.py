@@ -54,6 +54,8 @@ def archive_target_files():
 
 def fetch_csv_content(csv_files: [str]):
     lines = []
+    if NEW_YEAR and get_bot_type() == 'balancer':
+        lines.append(read_csv_header(TARGET_PATH + os.path.sep + csv_files[0]))
     for csv in csv_files:
         lines.append(read_csv(TARGET_PATH + os.path.sep + csv))
     return lines
@@ -68,6 +70,13 @@ def read_csv(filename_csv: str):
     if os.path.isfile(filename_csv):
         with open(filename_csv, 'r') as file:
             return list(file)[-1]
+    return None
+
+
+def read_csv_header(filename_csv: str):
+    if os.path.isfile(filename_csv):
+        with open(filename_csv, 'r') as file:
+            return list(file)[0]
     return None
 
 
@@ -123,12 +132,14 @@ if __name__ == '__main__':
     else:
         CONF = Config()
 
-    now = datetime.datetime.utcnow();
+    now = datetime.datetime.utcnow()
     if now.hour != 12:
         print('It is not past noon UTC: {}'.format(now.time().replace(microsecond=0)))
-        exit(0)
+        sys.exit(0)
 
-    if int(datetime.date.today().strftime("%j")) == 1:
+    NEW_YEAR = int(datetime.date.today().strftime("%j")) != 1
+
+    if NEW_YEAR:
         archive_target_files()
 
     BOT_CSV_FILES = sorted(get_active_bot_csv_files())
@@ -144,4 +155,4 @@ if __name__ == '__main__':
         MAIL_CONTENT = BOT_TYPE + '@' + socket.gethostname()
         send_mail('Aggregator Report {}'.format(BOT_TYPE), MAIL_CONTENT, CONF.file_name)
 
-    exit(0)
+    sys.exit(0)
