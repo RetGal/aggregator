@@ -137,7 +137,7 @@ if __name__ == '__main__':
         print('It is not past noon UTC: {}'.format(now.time().replace(microsecond=0)))
         sys.exit(0)
 
-    NEW_YEAR = int(datetime.date.today().strftime("%j")) != 1
+    NEW_YEAR = int(datetime.date.today().strftime("%j")) == 1
 
     if NEW_YEAR:
         archive_target_files()
