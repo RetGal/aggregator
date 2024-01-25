@@ -19,9 +19,9 @@ class Config:
         try:
             props = dict(config.items('config'))
             if file_name:
-                self.file_name = TARGET_PATH + os.path.sep + file_name.strip('"').split(".")[0] + '.csv'
+                self.file_name = os.path.join(TARGET_PATH, file_name.strip('"').split(".")[0] + '.csv')
             else:
-                self.file_name = TARGET_PATH + os.path.sep + props['file_name'].strip('"').split(".")[0] + '.csv'
+                self.file_name = os.path.join(TARGET_PATH, props['file_name'].strip('"').split(".")[0] + '.csv')
             self.send_emails = bool(props['send_emails'].strip('"').lower() == 'true')
             self.recipient_addresses = props['recipient_addresses'].strip('"').replace(' ', '').split(",")
             self.sender_address = props['sender_address'].strip('"')
@@ -48,16 +48,16 @@ def archive_target_files():
         else:
             parts = file.split('.')
             number = int(parts[2])+1
-            new_name = parts[0] + '.' + parts[1] + '.' + str(number)
-        os.rename(TARGET_PATH + os.path.sep + file, TARGET_PATH + os.path.sep + new_name)
+            new_name = '.'.join(parts[0], parts[1], str(number))
+        os.rename(os.path.join(TARGET_PATH, file), os.path.join(TARGET_PATH, new_name))
 
 
 def fetch_csv_content(csv_files: [str]):
     lines = []
     if NEW_YEAR and get_bot_type() == 'balancer':
-        lines.append(read_csv_header(TARGET_PATH + os.path.sep + csv_files[0]))
+        lines.append(read_csv_header(os.path.join(TARGET_PATH, csv_files[0])))
     for csv in csv_files:
-        lines.append(read_csv(TARGET_PATH + os.path.sep + csv))
+        lines.append(read_csv(os.path.join(TARGET_PATH, csv)))
     return lines
 
 
@@ -81,17 +81,17 @@ def read_csv_header(filename_csv: str):
 
 
 def get_bot_type():
-    if os.path.isfile(TARGET_PATH + os.path.sep + 'holdntrade.py'):
+    if os.path.isfile(os.path.join(TARGET_PATH, 'holdntrade.py')):
         return 'holdntrade'
-    if os.path.isfile(TARGET_PATH + os.path.sep + 'maverage.py'):
+    if os.path.isfile(os.path.join(TARGET_PATH, 'maverage.py')):
         return 'maverage'
-    if os.path.isfile(TARGET_PATH + os.path.sep + 'balancer.py'):
+    if os.path.isfile(os.path.join(TARGET_PATH, 'balancer.py')):
         return 'balancer'
     return 'unknown'
 
 
 def send_mail(subject: str, text: str, attachment: str = None):
-    recipients = ", ".join(CONF.recipient_addresses)
+    recipients = ', '.join(CONF.recipient_addresses)
     msg = MIMEMultipart()
     msg['Subject'] = subject
     msg['From'] = CONF.sender_address
