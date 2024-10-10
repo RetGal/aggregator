@@ -81,12 +81,14 @@ def read_csv_header(filename_csv: str):
 
 
 def get_bot_type():
-    if os.path.isfile(os.path.join(TARGET_PATH, 'holdntrade.py')):
-        return 'holdntrade'
-    if os.path.isfile(os.path.join(TARGET_PATH, 'maverage.py')):
-        return 'maverage'
-    if os.path.isfile(os.path.join(TARGET_PATH, 'balancer.py')):
-        return 'balancer'
+    bot_files = {
+        'holdntrade': 'holdntrade.py',
+        'maverage': 'maverage.py',
+        'balancer': 'balancer.py'
+    }
+    for bot_type, file_name in bot_files.items():
+        if os.path.isfile(os.path.join(TARGET_PATH, file_name)):
+            return bot_type
     return 'unknown'
 
 
