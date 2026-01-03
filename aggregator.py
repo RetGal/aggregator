@@ -9,10 +9,11 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import List, Optional
 
 
 class Config:
-    def __init__(self, file_name: str = None):
+    def __init__(self, file_name: Optional[str] = None):
         config = configparser.RawConfigParser()
         config.read('aggregator.txt')
 
@@ -48,12 +49,12 @@ def archive_target_files():
         else:
             parts = file.split('.')
             number = int(parts[2])+1
-            new_name = '.'.join(parts[0], parts[1], str(number))
+            new_name = '.'.join([parts[0], parts[1], str(number)])
         os.rename(os.path.join(TARGET_PATH, file), os.path.join(TARGET_PATH, new_name))
 
 
-def fetch_csv_content(csv_files: [str]):
-    lines = []
+def fetch_csv_content(csv_files: List[str]) -> List[Optional[str]]:
+    lines: List[Optional[str]] = []
     if NEW_YEAR and get_bot_type() == 'balancer':
         lines.append(read_csv_header(os.path.join(TARGET_PATH, csv_files[0])))
     for csv in csv_files:
@@ -61,19 +62,19 @@ def fetch_csv_content(csv_files: [str]):
     return lines
 
 
-def write_csv(file_content: str, filename_csv: str):
+def write_csv(file_content: str, filename_csv: str) -> None:
     with open(filename_csv, 'a') as file:
         file.write(file_content)
 
 
-def read_csv(filename_csv: str):
+def read_csv(filename_csv: str) -> Optional[str]:
     if os.path.isfile(filename_csv):
         with open(filename_csv, 'r') as file:
             return list(file)[-1]
     return None
 
 
-def read_csv_header(filename_csv: str):
+def read_csv_header(filename_csv: str) -> Optional[str]:
     if os.path.isfile(filename_csv):
         with open(filename_csv, 'r') as file:
             return list(file)[0]
@@ -134,7 +135,7 @@ if __name__ == '__main__':
     else:
         CONF = Config()
 
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc)
     if now.hour != 12:
         print('It is not past noon UTC: {}'.format(now.time().replace(microsecond=0)))
         sys.exit(0)
